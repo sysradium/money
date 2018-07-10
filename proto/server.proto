@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package money;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+
+// Enable custom Marshal method.
+option (gogoproto.marshaler_all) = false;
+// Enable custom Unmarshal method.
+option (gogoproto.unmarshaler_all) = false;
+// Enable custom Size method (Required by Marshal and Unmarshal).
+option (gogoproto.sizer_all) = false;
+// Enable registration with golang/protobuf for the grpc-gateway.
+option (gogoproto.goproto_registration) = true;
+// Enable generation of XXX_MessageName methods for grpc-go/status.
+option (gogoproto.messagename_all) = true;
+
+
+service Quotes {
+  rpc UpdateQuote(Quote) returns (Quote);
+}
+
+message Quote {
+  string price = 1 [(gogoproto.customtype) = "github.com/sysradium/money/money.Money"];
+  google.protobuf.Timestamp timestamp = 2 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+}
