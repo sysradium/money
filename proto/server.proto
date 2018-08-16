@@ -7,11 +7,11 @@ import "google/protobuf/timestamp.proto";
 
 
 // Enable custom Marshal method.
-option (gogoproto.marshaler_all) = false;
+option (gogoproto.marshaler_all) = true;
 // Enable custom Unmarshal method.
-option (gogoproto.unmarshaler_all) = false;
+option (gogoproto.unmarshaler_all) = true;
 // Enable custom Size method (Required by Marshal and Unmarshal).
-option (gogoproto.sizer_all) = false;
+option (gogoproto.sizer_all) = true;
 // Enable registration with golang/protobuf for the grpc-gateway.
 option (gogoproto.goproto_registration) = true;
 // Enable generation of XXX_MessageName methods for grpc-go/status.
@@ -23,6 +23,11 @@ service Quotes {
 }
 
 message Quote {
-  string price = 1 [(gogoproto.customtype) = "github.com/sysradium/money/money.Money"];
-  google.protobuf.Timestamp timestamp = 2 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  option (gogoproto.marshaler) = true;
+  bytes price = 1 [(gogoproto.customtype) = "github.com/sysradium/money/money.Money"];
+  google.protobuf.Timestamp timestamp = 2 [(gogoproto.stdtime) = true, (gogoproto.nullable) = true];
+  oneof value {
+    string name = 3;
+    int64  count = 4;
+  }
 }

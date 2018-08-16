@@ -27,6 +27,23 @@ func (m *Money) Unmarshal(data []byte) error {
 	return nil
 }
 
+func (m Money) MarshalTo(data []byte) (n int, err error) {
+	m.Decimal, _ = decimal.NewFromString(string(data))
+	return len(data), nil
+}
+
+func (m *Money) Size() int {
+	if m == nil {
+		return 0
+	}
+
+	b := []byte(m.Decimal.String())
+	if len(b) == 0 {
+		return 0
+	}
+	return len(b)
+}
+
 func NewFromString(value string) *Money {
 	v, _ := decimal.NewFromString(value)
 	return &Money{Decimal: v}
